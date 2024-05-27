@@ -24,8 +24,6 @@ resource "aws_lb" "grafana_lb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.grafana_sg.id]
   subnets            = var.subnet_ids
-
-  depends_on = [aws_internet_gateway.gw]
 }
 
 resource "aws_lb_target_group" "grafana_tg" {

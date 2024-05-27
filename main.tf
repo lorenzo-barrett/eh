@@ -23,11 +23,14 @@ module "alb" {
 }
 
 module "ecs" {
-  source       = "./modules/ecs"
-  subnet_ids   = module.network.public_subnet_ids
-  vpc_id       = module.network.vpc_id
-  rds_endpoint = module.rds.rds_endpoint
-  depends_on   = [module.network, module.rds, module.alb]
+  source           = "./modules/ecs"
+  subnet_ids       = module.network.public_subnet_ids
+  vpc_id           = module.network.vpc_id
+  rds_endpoint     = module.rds.rds_endpoint
+  security_group_id = module.alb.security_group_id
+  target_group_arn  = module.alb.target_group_arn
+  alb_listener_arn  = module.alb.alb_arn
+  depends_on       = [module.network, module.rds, module.alb]
 }
 
 module "waf" {

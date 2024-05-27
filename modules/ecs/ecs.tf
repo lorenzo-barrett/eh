@@ -50,15 +50,15 @@ resource "aws_ecs_service" "grafana_service" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.grafana_sg.id]
+    security_groups  = [var.security_group_id]
     assign_public_ip = true
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.grafana_tg.arn
+    target_group_arn = var.target_group_arn
     container_name   = "grafana"
     container_port   = 3000
   }
 
-  depends_on = [aws_lb_listener.grafana_listener]
+  depends_on = [var.alb_listener_arn]
 }
