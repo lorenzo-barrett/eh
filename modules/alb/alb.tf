@@ -31,6 +31,7 @@ resource "aws_lb_target_group" "grafana_tg" {
   port     = 3000
   protocol = "HTTP"
   vpc_id   = var.vpc_id
+  target_type = "ip"
 
   health_check {
     path                = "/"

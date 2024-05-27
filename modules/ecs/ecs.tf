@@ -8,7 +8,7 @@ resource "aws_ecs_task_definition" "grafana_task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
-  
+
   container_definitions = jsonencode([{
     name      = "grafana"
     image     = "grafana/grafana:latest"
@@ -28,11 +28,11 @@ resource "aws_ecs_task_definition" "grafana_task" {
       },
       {
         name  = "GF_DATABASE_USER"
-        value = "admin"
+        value = "grafadmin"
       },
       {
         name  = "GF_DATABASE_PASSWORD"
-        value = "yourpassword"  # Same password as RDS instance
+        value = "password"  # Same password as RDS instance
       },
       {
         name  = "GF_DATABASE_NAME"
@@ -51,7 +51,7 @@ resource "aws_ecs_service" "grafana_service" {
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {
