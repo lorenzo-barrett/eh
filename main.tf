@@ -24,6 +24,7 @@ module "alb" {
 
 module "ecs" {
   source           = "./modules/ecs"
+  aws_region       = var.aws_region
   subnet_ids       = module.network.public_subnet_ids
   vpc_id           = module.network.vpc_id
   rds_endpoint     = module.rds.rds_endpoint
@@ -34,7 +35,7 @@ module "ecs" {
 }
 
 module "waf" {
-  source = "./modules/waf"
+  source  = "./modules/waf"
   alb_arn = module.alb.alb_arn
   depends_on = [module.alb]
 }

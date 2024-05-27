@@ -40,6 +40,14 @@ resource "aws_ecs_task_definition" "grafana_task" {
         value = "grafana"
       }
     ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = "/ecs/grafana"
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "ecs"
+      }
+    }
   }])
 }
 

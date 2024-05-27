@@ -34,13 +34,19 @@ resource "aws_lb_target_group" "grafana_tg" {
   target_type = "ip"
 
   health_check {
-    path                = "/"
+    path                = "/api/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
+    matcher             = "200-299"
+  }
+
+  tags = {
+    Name = "grafana-tg"
   }
 }
+
 
 resource "aws_lb_listener" "grafana_listener" {
   load_balancer_arn = aws_lb.grafana_lb.arn
