@@ -9,17 +9,25 @@ module "network" {
 }
 
 module "rds" {
-  source = "./modules/rds"
-}
-
-module "ecs" {
-  source = "./modules/ecs"
+  source     = "./modules/rds"
+  subnet_ids = module.network.public_subnet_ids
+  vpc_id     = module.network.vpc_id
 }
 
 module "alb" {
-  source = "./modules/alb"
+  source     = "./modules/alb"
+  subnet_ids = module.network.public_subnet_ids
+  vpc_id     = module.network.vpc_id
+}
+
+module "ecs" {
+  source       = "./modules/ecs"
+  subnet_ids   = module.network.public_subnet_ids
+  vpc_id       = module.network.vpc_id
+  rds_endpoint = module.rds.rds_endpoint
 }
 
 module "waf" {
   source = "./modules/waf"
+  alb_arn = module.alb.alb_arn
 }

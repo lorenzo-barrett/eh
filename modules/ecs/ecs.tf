@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "grafana_task" {
       },
       {
         name  = "GF_DATABASE_HOST"
-        value = module.rds.rds_endpoint
+        value = var.rds_endpoint
       },
       {
         name  = "GF_DATABASE_USER"
@@ -49,7 +49,7 @@ resource "aws_ecs_service" "grafana_service" {
   desired_count   = 1
 
   network_configuration {
-    subnets          = aws_subnet.public.*.id
+    subnets          = var.subnet_ids
     security_groups  = [aws_security_group.grafana_sg.id]
     assign_public_ip = true
   }

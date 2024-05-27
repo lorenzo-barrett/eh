@@ -46,6 +46,6 @@ resource "aws_wafv2_ip_set" "grafana_ip_set" {
 }
 
 resource "aws_wafv2_web_acl_association" "grafana_waf_association" {
-  resource_arn = aws_lb.grafana_lb.arn
+  resource_arn = var.alb_arn
   web_acl_arn  = aws_wafv2_web_acl.grafana_waf.arn
 }

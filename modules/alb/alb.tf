@@ -1,7 +1,7 @@
 resource "aws_security_group" "grafana_sg" {
   name        = "grafana-sg"
   description = "Allow HTTP traffic to Grafana"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -23,7 +23,7 @@ resource "aws_lb" "grafana_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.grafana_sg.id]
-  subnets            = aws_subnet.public.*.id
+  subnets            = var.subnet_ids
 
   depends_on = [aws_internet_gateway.gw]
 }
@@ -32,7 +32,7 @@ resource "aws_lb_target_group" "grafana_tg" {
   name     = "grafana-tg"
   port     = 3000
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = var.vpc_id
 
   health_check {
     path                = "/"
