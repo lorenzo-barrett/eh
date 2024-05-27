@@ -7,20 +7,32 @@ resource "aws_db_subnet_group" "default" {
   }
 }
 
+resource "aws_db_parameter_group" "custom_postgres" {
+  name        = "postgres13"
+  family      = "postgres13"
+  description = "Custom parameter group for PostgreSQL 13"
+
+  parameter {
+    name  = "max_connections"
+    value = "100"
+  }
+}
+
 resource "aws_db_instance" "grafana_postgres" {
   allocated_storage    = 20
   storage_type         = "gp2"
   engine               = "postgres"
-  engine_version       = "12.5"
-  instance_class       = "db.t2.micro"  # Free Tier eligible
+  engine_version       = "13.4"
+  instance_class       = "db.t3.micro"  # Free Tier eligible
   db_subnet_group_name = aws_db_subnet_group.default.name
   identifier           = "grafana"
   username             = "grafadmin"
-  password             = "P@ssw0rd"  # Replace with a secure password
-  parameter_group_name = "default.postgres12"
+  password             = "password"  # Replace with a secure password
+  parameter_group_name = aws_db_parameter_group.custom_postgres.name
   skip_final_snapshot  = true
 
   tags = {
     Name = "grafana-postgres"
   }
 }
+
