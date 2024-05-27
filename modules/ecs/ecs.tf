@@ -6,6 +6,7 @@ resource "aws_ecs_task_definition" "grafana_task" {
   family                   = "grafana-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   cpu                      = "256"
   memory                   = "512"
 
@@ -47,11 +48,12 @@ resource "aws_ecs_service" "grafana_service" {
   cluster         = aws_ecs_cluster.grafana_cluster.id
   task_definition = aws_ecs_task_definition.grafana_task.arn
   desired_count   = 1
+  launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true  # Set to true to assign public IP to the Fargate task
   }
 
   load_balancer {
