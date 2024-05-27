@@ -12,12 +12,14 @@ module "rds" {
   source     = "./modules/rds"
   subnet_ids = module.network.public_subnet_ids
   vpc_id     = module.network.vpc_id
+  depends_on = [module.network]
 }
 
 module "alb" {
   source     = "./modules/alb"
   subnet_ids = module.network.public_subnet_ids
   vpc_id     = module.network.vpc_id
+  depends_on = [module.network]
 }
 
 module "ecs" {
@@ -25,9 +27,11 @@ module "ecs" {
   subnet_ids   = module.network.public_subnet_ids
   vpc_id       = module.network.vpc_id
   rds_endpoint = module.rds.rds_endpoint
+  depends_on   = [module.network, module.rds, module.alb]
 }
 
 module "waf" {
   source = "./modules/waf"
   alb_arn = module.alb.alb_arn
+  depends_on = [module.alb]
 }
