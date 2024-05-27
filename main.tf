@@ -1,9 +1,8 @@
 provider "aws" {
-  region     = "us-west-2"
-  access_key = "YOUR_ACCESS_KEY"    # Replace with your actual access key
-  secret_key = "YOUR_SECRET_KEY"    # Replace with your actual secret key
+  region     = var.aws_region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
-
 
 module "network" {
   source = "./modules/network"
