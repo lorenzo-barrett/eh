@@ -15,6 +15,7 @@ resource "aws_db_parameter_group" "custom_postgres" {
   parameter {
     name  = "max_connections"
     value = "100"
+    apply_method = "pending-reboot"  # Use pending-reboot for static parameters
   }
 }
 
