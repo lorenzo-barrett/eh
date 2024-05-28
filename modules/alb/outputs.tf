@@ -1,5 +1,9 @@
-output "security_group_id" {
+output "grafana_security_group_id" {
   value = aws_security_group.grafana_sg.id
+}
+
+output "rds_security_group_id" {
+  value = aws_security_group.rds_sg.id
 }
 
 output "target_group_arn" {

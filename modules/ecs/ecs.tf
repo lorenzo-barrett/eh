@@ -43,12 +43,17 @@ resource "aws_ecs_task_definition" "grafana_task" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        "awslogs-group"         = "/ecs/grafana"
+        "awslogs-group"         = aws_cloudwatch_log_group.grafana_log_group.name
         "awslogs-region"        = var.aws_region
         "awslogs-stream-prefix" = "ecs"
       }
     }
   }])
+}
+
+resource "aws_cloudwatch_log_group" "grafana_log_group" {
+  name              = "/ecs/grafana"
+  retention_in_days = 7
 }
 
 resource "aws_ecs_service" "grafana_service" {
@@ -59,9 +64,9 @@ resource "aws_ecs_service" "grafana_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = var.subnet_ids
+    subnets          = var.private_subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = true  # Set to true to assign public IP to the Fargate task
+    assign_public_ip = false  # Set to false to assign private IP to the Fargate task
   }
 
   load_balancer {
